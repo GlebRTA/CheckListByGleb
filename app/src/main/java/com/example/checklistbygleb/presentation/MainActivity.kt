@@ -1,4 +1,4 @@
-package com.example.checklistbygleb
+package com.example.checklistbygleb.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
