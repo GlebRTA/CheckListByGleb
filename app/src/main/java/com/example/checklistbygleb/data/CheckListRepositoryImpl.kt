@@ -5,7 +5,11 @@ import com.example.checklistbygleb.domain.CheckListRepository
 
 object CheckListRepositoryImpl : CheckListRepository {
     private val checkList = mutableListOf<CheckItem>()
-
+    init {
+        repeat(10) {
+            addCheckItem(CheckItem("Name $it", it, true))
+        }
+    }
     private var autoIncrementId = 0
 
     override fun addCheckItem(item: CheckItem) {
