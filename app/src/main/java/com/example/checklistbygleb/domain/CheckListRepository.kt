@@ -1,5 +1,7 @@
 package com.example.checklistbygleb.domain
 
+import androidx.lifecycle.LiveData
+
 interface CheckListRepository {
 
     fun addCheckItem(item: CheckItem)
@@ -10,5 +12,5 @@ interface CheckListRepository {
 
     fun getCheckItem(id: Int): CheckItem
 
-    fun getCheckList(): List<CheckItem>
+    fun getCheckList(): LiveData<List<CheckItem>>
 }
