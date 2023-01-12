@@ -11,8 +11,6 @@ private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    var count = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -20,11 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.checkList.observe(this) {
-            Log.d("MyLog", it.toString())
-            if (count == 0) {
-                count++
-                viewModel.changeEnableState(it[0])
-            }
+
         }
     }
 }

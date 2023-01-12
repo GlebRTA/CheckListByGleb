@@ -30,12 +30,9 @@ object CheckListRepositoryImpl : CheckListRepository {
     }
 
     override fun editCheckItem(item: CheckItem) {
-        /*checkList.remove(getCheckItem(item.id))
-        checkList.add(item.id, item)
-        updateList()*/
-
         checkList.remove(getCheckItem(item.id))
-        addCheckItem(item)
+        checkList.add(item.id, item)
+        updateList()
     }
 
     override fun getCheckItem(id: Int): CheckItem {
