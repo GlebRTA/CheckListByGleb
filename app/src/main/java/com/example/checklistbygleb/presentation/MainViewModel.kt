@@ -12,20 +12,14 @@ class MainViewModel : ViewModel() {
     private val deleteCheckItemUseCase = DeleteCheckItemUseCase(repository)
     private val editCheckItemUseCase = EditCheckItemUseCase(repository)
 
-    val checkList = MutableLiveData<List<CheckItem>>()
-
-    fun getCheckList() {
-        checkList.value = getCheckListUseCase.getCheckList()
-    }
+    val checkList = getCheckListUseCase.getCheckList()
 
     fun deleteCheckItem(item: CheckItem) {
         deleteCheckItemUseCase.deleteCheckItem(item)
-        getCheckList()
     }
 
     fun changeEnableState(item: CheckItem) {
         val newItem = item.copy(enabled = !item.enabled)
         editCheckItemUseCase.editCheckItem(newItem)
-        getCheckList()
     }
 }
