@@ -1,8 +1,8 @@
 package com.example.checklistbygleb.domain
 
-class AddCheckItemUseCase {
+class AddCheckItemUseCase(private val repository: CheckListRepository) {
 
     fun addCheckItem(item: CheckItem) {
-        TODO()
+        repository.addCheckItem(item)
     }
 }

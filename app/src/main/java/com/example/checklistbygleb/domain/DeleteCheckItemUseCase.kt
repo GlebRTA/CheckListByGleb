@@ -1,8 +1,8 @@
 package com.example.checklistbygleb.domain
 
-class DeleteCheckItemUseCase {
+class DeleteCheckItemUseCase(private val repository: CheckListRepository) {
 
     fun deleteCheckItem(item: CheckItem) {
-        TODO()
+        repository.deleteCheckItem(item)
     }
 }
