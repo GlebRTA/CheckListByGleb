@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.checklistbygleb.domain.CheckItem
 import com.example.checklistbygleb.domain.CheckListRepository
+import kotlin.random.Random
 
 object CheckListRepositoryImpl : CheckListRepository {
 
     private val checkListLD = MutableLiveData<List<CheckItem>>()
     private val checkList = mutableListOf<CheckItem>()
     init {
-        repeat(10) {
-            addCheckItem(CheckItem("Name $it", it, true))
+        repeat(1000) {
+            addCheckItem(CheckItem("Name $it", it, Random.nextBoolean()))
         }
     }
     private var autoIncrementId = 0
