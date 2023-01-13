@@ -17,6 +17,10 @@ class CheckListAdapter : RecyclerView.Adapter<CheckListAdapter.CheckItemViewHold
             notifyDataSetChanged()
         }
 
+    var onCheckItemClickListener: ((CheckItem) -> Unit)? = null
+    var onCheckItemLongClickListener: ((CheckItem) -> Unit)? = null
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckItemViewHolder {
         Log.d("RecycleView", "Count = ${count++}")
         val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
@@ -28,9 +32,14 @@ class CheckListAdapter : RecyclerView.Adapter<CheckListAdapter.CheckItemViewHold
         with(holder) {
             tvName.text = checkItem.name
             tvCount.text = checkItem.count.toString()
+            view.setOnClickListener {
+                onCheckItemClickListener?.invoke(checkItem)
+            }
             view.setOnLongClickListener {
+                onCheckItemLongClickListener?.invoke(checkItem)
                 true
             }
+
         }
     }
 
