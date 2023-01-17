@@ -9,7 +9,7 @@ import kotlin.random.Random
 object CheckListRepositoryImpl : CheckListRepository {
 
     private val checkListLD = MutableLiveData<List<CheckItem>>()
-    private val checkList = mutableListOf<CheckItem>()
+    private val checkList = sortedSetOf<CheckItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
     init {
         repeat(1000) {
             addCheckItem(CheckItem("Name $it", it, Random.nextBoolean()))
@@ -32,8 +32,7 @@ object CheckListRepositoryImpl : CheckListRepository {
 
     override fun editCheckItem(item: CheckItem) {
         checkList.remove(getCheckItem(item.id))
-        checkList.add(item.id, item)
-        updateList()
+        addCheckItem(item) //include updateList()
     }
 
     override fun getCheckItem(id: Int): CheckItem {

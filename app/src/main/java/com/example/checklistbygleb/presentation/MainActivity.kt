@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         initAdapter()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.checkList.observe(this) {
-            checkAdapter.checkList = it
+            checkAdapter.submitList(it)
         }
 
     }
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = checkAdapter.checkList[viewHolder.adapterPosition]
+                val item = checkAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteCheckItem(item)
             }
         }

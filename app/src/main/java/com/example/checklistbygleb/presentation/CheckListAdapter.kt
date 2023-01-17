@@ -1,34 +1,26 @@
 package com.example.checklistbygleb.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.domain.CheckItem
 
-class CheckListAdapter : RecyclerView.Adapter<CheckListAdapter.CheckItemViewHolder>() {
-    var count = 0
-    var checkList = listOf<CheckItem>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class CheckListAdapter : ListAdapter<CheckItem, CheckListAdapter.CheckItemViewHolder>(CheckItemDiffCallback()) {
 
     var onCheckItemClickListener: ((CheckItem) -> Unit)? = null
     var onCheckItemLongClickListener: ((CheckItem) -> Unit)? = null
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckItemViewHolder {
-        Log.d("RecycleView", "Count = ${count++}")
         val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
         return CheckItemViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CheckItemViewHolder, position: Int) {
-        val checkItem = checkList[position]
+        val checkItem = getItem(position)
         with(holder) {
             tvName.text = checkItem.name
             tvCount.text = checkItem.count.toString()
@@ -43,12 +35,8 @@ class CheckListAdapter : RecyclerView.Adapter<CheckListAdapter.CheckItemViewHold
         }
     }
 
-    override fun getItemCount(): Int {
-        return checkList.size
-    }
-
     override fun getItemViewType(position: Int): Int {
-        return if (checkList[position].enabled) {
+        return if (getItem(position).enabled) {
             VIEW_TYPE_ENABLED
         } else {
             VIEW_TYPE_DISABLED
