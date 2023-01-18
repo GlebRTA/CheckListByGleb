@@ -1,8 +1,7 @@
 package com.example.checklistbygleb.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -39,11 +38,11 @@ class MainActivity : AppCompatActivity() {
                 CheckListAdapter.VIEW_TYPE_DISABLED,
                 CheckListAdapter.MAX_POOL_SIZE
             )
-
         }
         setupClickListener()
         setupLongClickListener()
         setupSwipedListener(binding.rvCheckList)
+        setupAddBtn()
     }
 
     private fun setupLongClickListener() {
@@ -54,7 +53,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         checkAdapter.onCheckItemClickListener = {
-            Log.d("MyLog", "Info = $it")
+            val intent = CheckItemActivity.newIntentEditItem(this, it.id)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupAddBtn() {
+        binding.btnAddCheckItem.setOnClickListener {
+            val intent = CheckItemActivity.newIntentAddItem(this)
+            startActivity(intent)
         }
     }
 
