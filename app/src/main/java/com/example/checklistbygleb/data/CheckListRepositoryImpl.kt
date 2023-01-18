@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.checklistbygleb.domain.CheckItem
 import com.example.checklistbygleb.domain.CheckListRepository
+import kotlin.random.Random
 
 object CheckListRepositoryImpl : CheckListRepository {
 
     private val checkListLD = MutableLiveData<List<CheckItem>>()
-    private val checkList = mutableListOf<CheckItem>()
+    private val checkList = sortedSetOf<CheckItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
     init {
-        repeat(10) {
-            addCheckItem(CheckItem("Name $it", it, true))
+        repeat(1000) {
+            addCheckItem(CheckItem("Name $it", it, Random.nextBoolean()))
         }
     }
     private var autoIncrementId = 0
@@ -30,12 +31,8 @@ object CheckListRepositoryImpl : CheckListRepository {
     }
 
     override fun editCheckItem(item: CheckItem) {
-        /*checkList.remove(getCheckItem(item.id))
-        checkList.add(item.id, item)
-        updateList()*/
-
         checkList.remove(getCheckItem(item.id))
-        addCheckItem(item)
+        addCheckItem(item) //include updateList()
     }
 
     override fun getCheckItem(id: Int): CheckItem {

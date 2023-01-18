@@ -1,9 +1,11 @@
 package com.example.checklistbygleb.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.checklistbygleb.data.CheckListRepositoryImpl
-import com.example.checklistbygleb.domain.*
+import com.example.checklistbygleb.domain.CheckItem
+import com.example.checklistbygleb.domain.DeleteCheckItemUseCase
+import com.example.checklistbygleb.domain.EditCheckItemUseCase
+import com.example.checklistbygleb.domain.GetCheckListUseCase
 
 class MainViewModel : ViewModel() {
     private val repository = CheckListRepositoryImpl
