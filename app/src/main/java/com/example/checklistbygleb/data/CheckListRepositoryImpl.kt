@@ -11,7 +11,7 @@ object CheckListRepositoryImpl : CheckListRepository {
     private val checkListLD = MutableLiveData<List<CheckItem>>()
     private val checkList = sortedSetOf<CheckItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
     init {
-        repeat(1000) {
+        repeat(5) {
             addCheckItem(CheckItem("Name $it", it, Random.nextBoolean()))
         }
     }
