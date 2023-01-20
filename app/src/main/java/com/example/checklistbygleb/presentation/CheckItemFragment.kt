@@ -5,33 +5,35 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.ActivityCheckItemBinding
+import com.example.checklistbygleb.databinding.FragmentCheckItemBinding
 import com.example.checklistbygleb.domain.CheckItem
 
+class CheckItemFragment : Fragment() {
 
-class CheckItemActivity : AppCompatActivity() {
-
+    private lateinit var binding: FragmentCheckItemBinding
     private val viewModel: CheckItemViewModel by viewModels()
-    private lateinit var binding: ActivityCheckItemBinding
 
     private var screenMode = MODE_UNKNOWN
     private var checkItemId = CheckItem.UNDEFINED_ID
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCheckItemBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentCheckItemBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-/*
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCheckItemBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         parseIntent()
         //viewModel = ViewModelProvider(this)[CheckItemViewModel::class.java]
@@ -76,7 +78,7 @@ class CheckItemActivity : AppCompatActivity() {
 
     private fun launchEditMode() = with(binding) {
         viewModel.getCheckItem(checkItemId)
-        viewModel.checkItem.observe(this@CheckItemActivity) {
+        viewModel.checkItem.observe(viewLifecycleOwner) {
             etName.setText(it.name)
             etCount.setText(it.count.toString())
         }
@@ -98,7 +100,7 @@ class CheckItemActivity : AppCompatActivity() {
     }
 
     private fun setErrorInputName() {
-        viewModel.errorInputName.observe(this) {
+        viewModel.errorInputName.observe(viewLifecycleOwner) {
             val message = if (it) {
                 getString(R.string.error_input_name)
             } else {
@@ -109,7 +111,7 @@ class CheckItemActivity : AppCompatActivity() {
     }
 
     private fun setErrorInputCount() {
-        viewModel.errorInputCount.observe(this) {
+        viewModel.errorInputCount.observe(viewLifecycleOwner) {
             val message = if (it) {
                 getString(R.string.error_input_count)
             } else {
@@ -120,13 +122,13 @@ class CheckItemActivity : AppCompatActivity() {
     }
 
     private fun closeActivity() {
-        viewModel.isClosable.observe(this@CheckItemActivity) {
+        /*viewModel.isClosable.observe(viewLifecycleOwner) {
             finish()
-        }
+        }*/
     }
 
     private fun parseIntent() {
-        if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
+        /*if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
         }
         val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
@@ -139,8 +141,8 @@ class CheckItemActivity : AppCompatActivity() {
                 throw RuntimeException("Param check item id is absent")
             }
             checkItemId = intent.getIntExtra(EXTRA_CHECK_ITEM_ID, CheckItem.UNDEFINED_ID)
-        }
-    }*/
+        }*/
+    }
 
     companion object {
         private const val EXTRA_SCREEN_MODE = "extra_mode"
@@ -162,4 +164,5 @@ class CheckItemActivity : AppCompatActivity() {
             return intent
         }
     }
+
 }
