@@ -1,29 +1,32 @@
 package com.example.checklistbygleb.presentation
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.ActivityMainBinding
 
-private lateinit var viewModel: MainViewModel
-private lateinit var binding: ActivityMainBinding
-private lateinit var checkAdapter: CheckListAdapter
+
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var checkAdapter: CheckListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         initAdapter()
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.checkList.observe(this) {
             checkAdapter.submitList(it)
         }
-
+        startInitHorizontal(savedInstanceState)
     }
 
     private fun initAdapter() {
@@ -45,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         setupAddBtn()
     }
 
+    private fun startInitHorizontal(savedState: Bundle?) {
+        TODO("Create init on vertical pos")
+        if (savedState == null && !isVerticalOrientated()) launchFragment(CheckItemFragment.newInstanceAddItem())
+    }
+
     private fun setupLongClickListener() {
         checkAdapter.onCheckItemLongClickListener = {
             viewModel.changeEnableState(it)
@@ -53,16 +61,37 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         checkAdapter.onCheckItemClickListener = {
-            val intent = CheckItemActivity.newIntentEditItem(this, it.id)
-            startActivity(intent)
+            if (isVerticalOrientated()) {
+                val intent = CheckItemActivity.newIntentEditItem(this, it.id)
+                startActivity(intent)
+            } else {
+                launchFragment(CheckItemFragment.newInstanceEditItem(it.id))
+            }
         }
     }
 
     private fun setupAddBtn() {
         binding.btnAddCheckItem.setOnClickListener {
-            val intent = CheckItemActivity.newIntentAddItem(this)
-            startActivity(intent)
+            if (isVerticalOrientated()) {
+                val intent = CheckItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            } else {
+                launchFragment(CheckItemFragment.newInstanceAddItem())
+            }
         }
+    }
+
+    private fun isVerticalOrientated(): Boolean {
+        return binding.checkItemContainer == null
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.check_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupSwipedListener(recyclerView: RecyclerView) {

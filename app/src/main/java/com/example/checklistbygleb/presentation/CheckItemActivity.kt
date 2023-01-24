@@ -24,9 +24,10 @@ class CheckItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCheckItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         parseIntent()
-        launchRightMode()
+        if (savedInstanceState == null) {
+            launchRightMode()
+        }
     }
 
     private fun launchRightMode() {
@@ -37,7 +38,7 @@ class CheckItemActivity : AppCompatActivity() {
         }
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.check_item_container, fragment)
+            .replace(R.id.check_item_container, fragment)
             .commit()
     }
 
