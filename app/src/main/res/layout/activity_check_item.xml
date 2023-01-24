@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/check_item_container"
-    android:name="com.example.checklistbygleb.presentation.CheckItemFragment"
     tools:layout="@layout/fragment_check_item"
     tools:context=".presentation.CheckItemActivity" />
 

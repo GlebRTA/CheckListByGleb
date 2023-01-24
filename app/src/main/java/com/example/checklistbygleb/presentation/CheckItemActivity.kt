@@ -15,7 +15,6 @@ import com.example.checklistbygleb.domain.CheckItem
 
 class CheckItemActivity : AppCompatActivity() {
 
-    private val viewModel: CheckItemViewModel by viewModels()
     private lateinit var binding: ActivityCheckItemBinding
 
     private var screenMode = MODE_UNKNOWN
@@ -25,104 +24,21 @@ class CheckItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCheckItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
-
-/*
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCheckItemBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         parseIntent()
-        //viewModel = ViewModelProvider(this)[CheckItemViewModel::class.java]
         launchRightMode()
-        initAddTextChangerListener()
-        initEditTextChangerListener()
-        setErrorInputCount()
-        setErrorInputName()
-
     }
 
     private fun launchRightMode() {
-        when (screenMode) {
-            MODE_EDIT -> launchEditMode()
-            MODE_ADD -> launchAddMode()
+        val fragment = when (screenMode) {
+            MODE_EDIT -> CheckItemFragment.newInstanceEditItem(checkItemId)
+            MODE_ADD -> CheckItemFragment.newInstanceAddItem()
+            else -> throw RuntimeException("Unknown screen mode $screenMode")
         }
-    }
-
-    private fun initAddTextChangerListener() {
-        binding.etName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {  }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputName()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {  }
-        })
-    }
-
-    private fun initEditTextChangerListener() {
-        binding.etCount.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {  }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputCount()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {  }
-        })
-    }
-
-    private fun launchEditMode() = with(binding) {
-        viewModel.getCheckItem(checkItemId)
-        viewModel.checkItem.observe(this@CheckItemActivity) {
-            etName.setText(it.name)
-            etCount.setText(it.count.toString())
-        }
-        btnSave.setOnClickListener {
-            val name = etName.text.toString()
-            val count = etCount.text.toString()
-            viewModel.editCheckItem(name, count)
-        }
-        closeActivity()
-    }
-
-    private fun launchAddMode() = with(binding) {
-        btnSave.setOnClickListener {
-            val name = etName.text.toString()
-            val count = etCount.text.toString()
-            viewModel.addCheckItem(name, count)
-        }
-        closeActivity()
-    }
-
-    private fun setErrorInputName() {
-        viewModel.errorInputName.observe(this) {
-            val message = if (it) {
-                getString(R.string.error_input_name)
-            } else {
-                null
-            }
-            binding.tilName.error = message
-        }
-    }
-
-    private fun setErrorInputCount() {
-        viewModel.errorInputCount.observe(this) {
-            val message = if (it) {
-                getString(R.string.error_input_count)
-            } else {
-                null
-            }
-            binding.tilCount.error = message
-        }
-    }
-
-    private fun closeActivity() {
-        viewModel.isClosable.observe(this@CheckItemActivity) {
-            finish()
-        }
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.check_item_container, fragment)
+            .commit()
     }
 
     private fun parseIntent() {
@@ -140,7 +56,7 @@ class CheckItemActivity : AppCompatActivity() {
             }
             checkItemId = intent.getIntExtra(EXTRA_CHECK_ITEM_ID, CheckItem.UNDEFINED_ID)
         }
-    }*/
+    }
 
     companion object {
         private const val EXTRA_SCREEN_MODE = "extra_mode"

@@ -1,18 +1,14 @@
 package com.example.checklistbygleb.presentation
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.checklistbygleb.R
-import com.example.checklistbygleb.databinding.ActivityCheckItemBinding
 import com.example.checklistbygleb.databinding.FragmentCheckItemBinding
 import com.example.checklistbygleb.domain.CheckItem
 
@@ -21,11 +17,17 @@ class CheckItemFragment : Fragment() {
     private lateinit var binding: FragmentCheckItemBinding
     private val viewModel: CheckItemViewModel by viewModels()
 
-    private var screenMode = MODE_UNKNOWN
-    private var checkItemId = CheckItem.UNDEFINED_ID
+    private var screenMode: String = MODE_UNKNOWN
+    private var checkItemId: Int = CheckItem.UNDEFINED_ID
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseIntent()
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCheckItemBinding.inflate(inflater, container, false)
@@ -34,15 +36,11 @@ class CheckItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        parseIntent()
-        //viewModel = ViewModelProvider(this)[CheckItemViewModel::class.java]
         launchRightMode()
         initAddTextChangerListener()
         initEditTextChangerListener()
         setErrorInputCount()
         setErrorInputName()
-
     }
 
     private fun launchRightMode() {
@@ -122,47 +120,51 @@ class CheckItemFragment : Fragment() {
     }
 
     private fun closeActivity() {
-        /*viewModel.isClosable.observe(viewLifecycleOwner) {
-            finish()
-        }*/
+        viewModel.isClosable.observe(viewLifecycleOwner) {
+            activity?.onBackPressed()
+        }
     }
 
     private fun parseIntent() {
-        /*if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
+        val args = requireArguments()
+        if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
         }
-        val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
+        val mode = args.getString(SCREEN_MODE)
         if (mode != MODE_ADD && mode != MODE_EDIT) {
             throw RuntimeException("Unknown screen mode: $mode")
         }
         screenMode = mode
         if (screenMode == MODE_EDIT) {
-            if (!intent.hasExtra(EXTRA_CHECK_ITEM_ID)) {
+            if (!args.containsKey(CHECK_ITEM_ID)) {
                 throw RuntimeException("Param check item id is absent")
             }
-            checkItemId = intent.getIntExtra(EXTRA_CHECK_ITEM_ID, CheckItem.UNDEFINED_ID)
-        }*/
+            checkItemId = args.getInt(CHECK_ITEM_ID, CheckItem.UNDEFINED_ID)
+        }
     }
 
     companion object {
-        private const val EXTRA_SCREEN_MODE = "extra_mode"
-        private const val EXTRA_CHECK_ITEM_ID = "extra_check_item_id"
+        private const val SCREEN_MODE = "extra_mode"
+        private const val CHECK_ITEM_ID = "extra_check_item_id"
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
 
-        fun newIntentAddItem(context: Context): Intent {
-            val intent = Intent(context, CheckItemActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
-            return intent
+        fun newInstanceAddItem(): CheckItemFragment {
+            return CheckItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SCREEN_MODE, MODE_ADD)
+                }
+            }
         }
 
-        fun newIntentEditItem(context: Context, itemId: Int): Intent {
-            val intent = Intent(context, CheckItemActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
-            intent.putExtra(EXTRA_CHECK_ITEM_ID, itemId)
-            return intent
+        fun newInstanceEditItem(checkItemId: Int): CheckItemFragment {
+            return CheckItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SCREEN_MODE, MODE_EDIT)
+                    putInt(CHECK_ITEM_ID, checkItemId)
+                }
+            }
         }
     }
-
 }
