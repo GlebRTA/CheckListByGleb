@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CheckItemFragment.OnEditingFinishedListener {
 
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
@@ -91,6 +91,8 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+
+
     private fun setupSwipedListener(recyclerView: RecyclerView) {
         val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -108,5 +110,9 @@ class MainActivity : AppCompatActivity() {
         }
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    override fun editFinishedListener() {
+        supportFragmentManager.popBackStack()
     }
 }

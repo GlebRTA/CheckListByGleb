@@ -54,6 +54,10 @@ class CheckItemActivity : AppCompatActivity(), CheckItemFragment.OnEditingFinish
         }
     }
 
+    override fun editFinishedListener() {
+        finish()
+    }
+
     companion object {
         private const val EXTRA_SCREEN_MODE = "extra_mode"
         private const val EXTRA_CHECK_ITEM_ID = "extra_check_item_id"
@@ -73,9 +77,5 @@ class CheckItemActivity : AppCompatActivity(), CheckItemFragment.OnEditingFinish
             intent.putExtra(EXTRA_CHECK_ITEM_ID, itemId)
             return intent
         }
-    }
-
-    override fun editFinishedListener() {
-        finish()
     }
 }
