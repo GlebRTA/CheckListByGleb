@@ -26,7 +26,8 @@
                 android:value="" />
         </activity>
         
-        <activity android:name=".presentation.CheckItemActivity"
+        <activity
+            android:name=".presentation.CheckItemActivity"
             android:windowSoftInputMode="adjustResize" />
 
     </application>

@@ -44,7 +44,6 @@ class CheckListAdapter : ListAdapter<CheckItem, CheckListAdapter.CheckItemViewHo
     }
 
     class CheckItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-
         val tvName = view.findViewById<TextView>(R.id.tvName)
         val tvCount = view.findViewById<TextView>(R.id.tvCount)
     }
