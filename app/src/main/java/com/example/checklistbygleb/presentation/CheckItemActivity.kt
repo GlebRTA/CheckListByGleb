@@ -3,17 +3,12 @@ package com.example.checklistbygleb.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.ActivityCheckItemBinding
 import com.example.checklistbygleb.domain.CheckItem
 
-
-class CheckItemActivity : AppCompatActivity() {
+class CheckItemActivity : AppCompatActivity(), CheckItemFragment.OnEditingFinishedListener {
 
     private lateinit var binding: ActivityCheckItemBinding
 
@@ -78,5 +73,9 @@ class CheckItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_CHECK_ITEM_ID, itemId)
             return intent
         }
+    }
+
+    override fun editFinishedListener() {
+        finish()
     }
 }

@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.ActivityMainBinding
 
-
-
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
@@ -49,7 +47,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startInitHorizontal(savedState: Bundle?) {
-        TODO("Create init on vertical pos")
         if (savedState == null && !isVerticalOrientated()) launchFragment(CheckItemFragment.newInstanceAddItem())
     }
 

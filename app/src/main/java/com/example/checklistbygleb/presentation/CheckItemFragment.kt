@@ -1,5 +1,6 @@
 package com.example.checklistbygleb.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,10 +16,19 @@ import com.example.checklistbygleb.domain.CheckItem
 class CheckItemFragment : Fragment() {
 
     private lateinit var binding: FragmentCheckItemBinding
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
     private val viewModel: CheckItemViewModel by viewModels()
-
     private var screenMode: String = MODE_UNKNOWN
     private var checkItemId: Int = CheckItem.UNDEFINED_ID
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw RuntimeException("Activity must implement OnEditingFinishedListener")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,7 +131,8 @@ class CheckItemFragment : Fragment() {
 
     private fun closeActivity() {
         viewModel.isClosable.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            //activity?.onBackPressed()
+            onEditingFinishedListener.editFinishedListener()
         }
     }
 
@@ -141,6 +152,10 @@ class CheckItemFragment : Fragment() {
             }
             checkItemId = args.getInt(CHECK_ITEM_ID, CheckItem.UNDEFINED_ID)
         }
+    }
+
+    interface OnEditingFinishedListener {
+        fun editFinishedListener()
     }
 
     companion object {
