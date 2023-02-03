@@ -1,51 +1,38 @@
 package com.example.checklistbygleb.data
 
+import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.example.checklistbygleb.domain.CheckItem
 import com.example.checklistbygleb.domain.CheckListRepository
-import kotlin.random.Random
 
-object CheckListRepositoryImpl : CheckListRepository {
+class CheckListRepositoryImpl(
+    application: Application
+) : CheckListRepository {
 
-    private val checkListLD = MutableLiveData<List<CheckItem>>()
-    private val checkList = sortedSetOf<CheckItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
-    init {
-        repeat(5) {
-            addCheckItem(CheckItem("Name $it", it, Random.nextBoolean()))
-        }
-    }
-    private var autoIncrementId = 0
+    private val checkListDao = AppDatabase.getInstance(application).shopListDao()
+    private val checkListMapper = CheckListMapper()
 
-    override fun addCheckItem(item: CheckItem) {
-        if (item.id == CheckItem.UNDEFINED_ID) {
-            item.id = autoIncrementId++
-        }
-        checkList.add(item)
-        updateList()
+    override suspend fun addCheckItem(item: CheckItem) {
+        checkListDao.addCheckItem(checkListMapper.mapEntityToDbModel(item))
     }
 
-    override fun deleteCheckItem(item: CheckItem) {
-        checkList.remove(item)
-        updateList()
+    override suspend fun deleteCheckItem(item: CheckItem) {
+        checkListDao.deleteCheckItem(item.id)
     }
 
-    override fun editCheckItem(item: CheckItem) {
-        checkList.remove(getCheckItem(item.id))
-        addCheckItem(item) //include updateList()
+    override suspend fun editCheckItem(item: CheckItem) {
+        checkListDao.addCheckItem(checkListMapper.mapEntityToDbModel(item))
     }
 
-    override fun getCheckItem(id: Int): CheckItem {
-        return checkList.find {
-            it.id == id
-        } ?: throw RuntimeException("Element with $id not found")
+    override suspend fun getCheckItem(id: Int): CheckItem {
+        val dbModel = checkListDao.getCheckItem(id)
+        return checkListMapper.mapDbModelToEntity(dbModel)
     }
 
     override fun getCheckList(): LiveData<List<CheckItem>> {
-        return checkListLD
-    }
-
-    private fun updateList() {
-        checkListLD.value = checkList.toList()
+        return Transformations.map(checkListDao.getCheckList()) {
+            checkListMapper.mapListDbModelToListEntity(it)
+        }
     }
 }

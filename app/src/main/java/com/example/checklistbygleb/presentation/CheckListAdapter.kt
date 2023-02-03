@@ -4,34 +4,51 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.checklistbygleb.R
+import com.example.checklistbygleb.databinding.ItemShopDisabledBinding
+import com.example.checklistbygleb.databinding.ItemShopEnabledBinding
 import com.example.checklistbygleb.domain.CheckItem
 
-class CheckListAdapter : ListAdapter<CheckItem, CheckListAdapter.CheckItemViewHolder>(CheckItemDiffCallback()) {
+class CheckListAdapter :
+    ListAdapter<CheckItem, CheckListAdapter.CheckItemViewHolder>(CheckItemDiffCallback()) {
 
     var onCheckItemClickListener: ((CheckItem) -> Unit)? = null
     var onCheckItemLongClickListener: ((CheckItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
-        return CheckItemViewHolder(view)
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(
+            LayoutInflater.from(parent.context),
+            viewType,
+            parent,
+            false
+        )
+        return CheckItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CheckItemViewHolder, position: Int) {
         val checkItem = getItem(position)
-        with(holder) {
-            tvName.text = checkItem.name
-            tvCount.text = checkItem.count.toString()
-            view.setOnClickListener {
-                onCheckItemClickListener?.invoke(checkItem)
-            }
-            view.setOnLongClickListener {
-                onCheckItemLongClickListener?.invoke(checkItem)
-                true
-            }
+        val binding = holder.binding
 
+        binding.root.setOnClickListener {
+            onCheckItemClickListener?.invoke(checkItem)
+        }
+        binding.root.setOnLongClickListener {
+            onCheckItemLongClickListener?.invoke(checkItem)
+            true
+        }
+        when (binding) {
+            is ItemShopDisabledBinding -> {
+                binding.tvName.text = checkItem.name
+                binding.tvCount.text = checkItem.count.toString()
+            }
+            is ItemShopEnabledBinding -> {
+                binding.tvName.text = checkItem.name
+                binding.tvCount.text = checkItem.count.toString()
+            }
         }
     }
 
@@ -43,10 +60,7 @@ class CheckListAdapter : ListAdapter<CheckItem, CheckListAdapter.CheckItemViewHo
         }
     }
 
-    class CheckItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val tvName = view.findViewById<TextView>(R.id.tvName)
-        val tvCount = view.findViewById<TextView>(R.id.tvCount)
-    }
+    class CheckItemViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
     companion object {
 
