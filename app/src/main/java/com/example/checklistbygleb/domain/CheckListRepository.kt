@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 
 interface CheckListRepository {
 
-    fun addCheckItem(item: CheckItem)
+    suspend fun addCheckItem(item: CheckItem)
 
-    fun deleteCheckItem(item: CheckItem)
+    suspend fun deleteCheckItem(item: CheckItem)
 
-    fun editCheckItem(item: CheckItem)
+    suspend fun editCheckItem(item: CheckItem)
 
-    fun getCheckItem(id: Int): CheckItem
+    suspend fun getCheckItem(id: Int): CheckItem
 
     fun getCheckList(): LiveData<List<CheckItem>>
 }

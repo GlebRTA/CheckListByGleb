@@ -1,14 +1,21 @@
 package com.example.checklistbygleb.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.checklistbygleb.data.CheckListRepositoryImpl
 import com.example.checklistbygleb.domain.CheckItem
 import com.example.checklistbygleb.domain.DeleteCheckItemUseCase
 import com.example.checklistbygleb.domain.EditCheckItemUseCase
 import com.example.checklistbygleb.domain.GetCheckListUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
-    private val repository = CheckListRepositoryImpl
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository = CheckListRepositoryImpl(application)
 
     private val getCheckListUseCase = GetCheckListUseCase(repository)
     private val deleteCheckItemUseCase = DeleteCheckItemUseCase(repository)
@@ -17,11 +24,15 @@ class MainViewModel : ViewModel() {
     val checkList = getCheckListUseCase.getCheckList()
 
     fun deleteCheckItem(item: CheckItem) {
-        deleteCheckItemUseCase.deleteCheckItem(item)
+        viewModelScope.launch {
+            deleteCheckItemUseCase.deleteCheckItem(item)
+        }
     }
 
     fun changeEnableState(item: CheckItem) {
-        val newItem = item.copy(enabled = !item.enabled)
-        editCheckItemUseCase.editCheckItem(newItem)
+        viewModelScope.launch {
+            val newItem = item.copy(enabled = !item.enabled)
+            editCheckItemUseCase.editCheckItem(newItem)
+        }
     }
 }

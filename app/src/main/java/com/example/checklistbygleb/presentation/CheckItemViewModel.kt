@@ -1,17 +1,20 @@
 package com.example.checklistbygleb.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
 import com.example.checklistbygleb.data.CheckListRepositoryImpl
 import com.example.checklistbygleb.domain.AddCheckItemUseCase
 import com.example.checklistbygleb.domain.CheckItem
 import com.example.checklistbygleb.domain.EditCheckItemUseCase
 import com.example.checklistbygleb.domain.GetCheckItemUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
-class CheckItemViewModel : ViewModel() {
+class CheckItemViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = CheckListRepositoryImpl
+    private val repository = CheckListRepositoryImpl(application)
 
     private val getCheckItemUseCase = GetCheckItemUseCase(repository)
     private val addCheckItemUseCase = AddCheckItemUseCase(repository)
@@ -33,19 +36,22 @@ class CheckItemViewModel : ViewModel() {
     val isClosable: LiveData<Boolean>
         get() = _isClosable
 
-
     fun getCheckItem(itemId: Int) {
-        val item = getCheckItemUseCase.getCheckItem(itemId)
-        _checkItem.value = item
+        viewModelScope.launch {
+            val item = getCheckItemUseCase.getCheckItem(itemId)
+            _checkItem.value = item
+        }
     }
 
     fun addCheckItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         if (isValid(name, count)) {
-            val item = CheckItem(name, count, true)
-            addCheckItemUseCase.addCheckItem(item)
-            closeActivity()
+            viewModelScope.launch {
+                val item = CheckItem(name, count, true)
+                addCheckItemUseCase.addCheckItem(item)
+                closeActivity()
+            }
         }
     }
 
@@ -53,9 +59,11 @@ class CheckItemViewModel : ViewModel() {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         if (isValid(name, count)) {
-            _checkItem.value?.let {
-                editCheckItemUseCase.editCheckItem(it.copy(name = name, count = count))
-                closeActivity()
+            viewModelScope.launch {
+                _checkItem.value?.let {
+                    editCheckItemUseCase.editCheckItem(it.copy(name = name, count = count))
+                    closeActivity()
+                }
             }
         }
     }
