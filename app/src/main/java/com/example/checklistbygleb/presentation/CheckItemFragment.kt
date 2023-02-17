@@ -8,20 +8,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.FragmentCheckItemBinding
 import com.example.checklistbygleb.domain.entity.CheckItem
+import javax.inject.Inject
 
 class CheckItemFragment : Fragment() {
 
     private lateinit var binding: FragmentCheckItemBinding
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
-    private val viewModel: CheckItemViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[CheckItemViewModel::class.java]
+    }
+    private val component by lazy {
+        (requireActivity().application as CheckApp).component
+    }
     private var screenMode: String = MODE_UNKNOWN
     private var checkItemId: Int = CheckItem.UNDEFINED_ID
 
     override fun onAttach(context: Context) {
+        component.inject(this)
         super.onAttach(context)
         if (context is OnEditingFinishedListener) {
             onEditingFinishedListener = context
