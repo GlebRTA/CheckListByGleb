@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.ActivityCheckItemBinding
-import com.example.checklistbygleb.domain.CheckItem
+import com.example.checklistbygleb.domain.entity.CheckItem
 
 class CheckItemActivity : AppCompatActivity(), CheckItemFragment.OnEditingFinishedListener {
 

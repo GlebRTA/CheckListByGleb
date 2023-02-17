@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.FragmentCheckItemBinding
-import com.example.checklistbygleb.domain.CheckItem
+import com.example.checklistbygleb.domain.entity.CheckItem
 
 class CheckItemFragment : Fragment() {
 
@@ -33,7 +32,7 @@ class CheckItemFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseIntent()
+        parseArguments()
     }
 
     override fun onCreateView(
@@ -137,7 +136,7 @@ class CheckItemFragment : Fragment() {
         }
     }
 
-    private fun parseIntent() {
+    private fun parseArguments() {
         val args = requireArguments()
         if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")

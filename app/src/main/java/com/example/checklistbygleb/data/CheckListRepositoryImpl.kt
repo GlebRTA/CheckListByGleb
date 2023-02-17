@@ -3,8 +3,8 @@ package com.example.checklistbygleb.data
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.example.checklistbygleb.domain.CheckItem
-import com.example.checklistbygleb.domain.CheckListRepository
+import com.example.checklistbygleb.domain.entity.CheckItem
+import com.example.checklistbygleb.domain.repository.CheckListRepository
 
 class CheckListRepositoryImpl(
     application: Application
