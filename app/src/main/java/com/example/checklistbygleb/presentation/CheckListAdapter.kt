@@ -1,9 +1,7 @@
 package com.example.checklistbygleb.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
@@ -11,10 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.checklistbygleb.R
 import com.example.checklistbygleb.databinding.ItemShopDisabledBinding
 import com.example.checklistbygleb.databinding.ItemShopEnabledBinding
-import com.example.checklistbygleb.domain.CheckItem
+import com.example.checklistbygleb.domain.entity.CheckItem
 
-class CheckListAdapter :
-    ListAdapter<CheckItem, CheckListAdapter.CheckItemViewHolder>(CheckItemDiffCallback()) {
+class CheckListAdapter : ListAdapter<CheckItem, CheckListAdapter.CheckItemViewHolder>(CheckItemDiffCallback()) {
 
     var onCheckItemClickListener: ((CheckItem) -> Unit)? = null
     var onCheckItemLongClickListener: ((CheckItem) -> Unit)? = null

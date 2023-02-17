@@ -3,15 +3,14 @@ package com.example.checklistbygleb.data
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.example.checklistbygleb.domain.CheckItem
-import com.example.checklistbygleb.domain.CheckListRepository
+import com.example.checklistbygleb.domain.entity.CheckItem
+import com.example.checklistbygleb.domain.repository.CheckListRepository
+import javax.inject.Inject
 
-class CheckListRepositoryImpl(
-    application: Application
+class CheckListRepositoryImpl @Inject constructor(
+    private val checkListDao: CheckListDao,
+    private val checkListMapper: CheckListMapper,
 ) : CheckListRepository {
-
-    private val checkListDao = AppDatabase.getInstance(application).shopListDao()
-    private val checkListMapper = CheckListMapper()
 
     override suspend fun addCheckItem(item: CheckItem) {
         checkListDao.addCheckItem(checkListMapper.mapEntityToDbModel(item))

@@ -1,4 +1,4 @@
-package com.example.checklistbygleb.domain
+package com.example.checklistbygleb.domain.entity
 
 data class CheckItem(
     val name: String,

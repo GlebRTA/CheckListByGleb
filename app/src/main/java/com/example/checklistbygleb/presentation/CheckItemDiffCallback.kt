@@ -1,7 +1,7 @@
 package com.example.checklistbygleb.presentation
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.checklistbygleb.domain.CheckItem
+import com.example.checklistbygleb.domain.entity.CheckItem
 
 class CheckItemDiffCallback : DiffUtil.ItemCallback<CheckItem>() {
     override fun areItemsTheSame(oldItem: CheckItem, newItem: CheckItem): Boolean {

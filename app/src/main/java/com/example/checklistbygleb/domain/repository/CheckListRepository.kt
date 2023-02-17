@@ -1,6 +1,7 @@
-package com.example.checklistbygleb.domain
+package com.example.checklistbygleb.domain.repository
 
 import androidx.lifecycle.LiveData
+import com.example.checklistbygleb.domain.entity.CheckItem
 
 interface CheckListRepository {
 

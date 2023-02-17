@@ -1,8 +1,9 @@
 package com.example.checklistbygleb.data
 
-import com.example.checklistbygleb.domain.CheckItem
+import com.example.checklistbygleb.domain.entity.CheckItem
+import javax.inject.Inject
 
-class CheckListMapper {
+class CheckListMapper @Inject constructor() {
 
     fun mapEntityToDbModel(checkItem: CheckItem) = CheckItemDbModel(
         id = checkItem.id,

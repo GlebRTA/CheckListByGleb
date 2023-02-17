@@ -3,22 +3,18 @@ package com.example.checklistbygleb.presentation
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.checklistbygleb.data.CheckListRepositoryImpl
-import com.example.checklistbygleb.domain.AddCheckItemUseCase
-import com.example.checklistbygleb.domain.CheckItem
-import com.example.checklistbygleb.domain.EditCheckItemUseCase
-import com.example.checklistbygleb.domain.GetCheckItemUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import com.example.checklistbygleb.domain.usecases.AddCheckItemUseCase
+import com.example.checklistbygleb.domain.entity.CheckItem
+import com.example.checklistbygleb.domain.usecases.EditCheckItemUseCase
+import com.example.checklistbygleb.domain.usecases.GetCheckItemUseCase
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CheckItemViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = CheckListRepositoryImpl(application)
-
-    private val getCheckItemUseCase = GetCheckItemUseCase(repository)
-    private val addCheckItemUseCase = AddCheckItemUseCase(repository)
-    private val editCheckItemUseCase = EditCheckItemUseCase(repository)
+class CheckItemViewModel @Inject constructor(
+    private val getCheckItemUseCase: GetCheckItemUseCase,
+    private val addCheckItemUseCase: AddCheckItemUseCase,
+    private val editCheckItemUseCase: EditCheckItemUseCase,
+) : ViewModel() {
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
@@ -76,7 +72,7 @@ class CheckItemViewModel(application: Application) : AndroidViewModel(applicatio
         return try {
             count?.trim()?.toInt() ?: 0
         } catch (e: Exception) {
-           0
+            0
         }
     }
 

@@ -1,25 +1,20 @@
 package com.example.checklistbygleb.presentation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.checklistbygleb.data.CheckListRepositoryImpl
-import com.example.checklistbygleb.domain.CheckItem
-import com.example.checklistbygleb.domain.DeleteCheckItemUseCase
-import com.example.checklistbygleb.domain.EditCheckItemUseCase
-import com.example.checklistbygleb.domain.GetCheckListUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import com.example.checklistbygleb.domain.entity.CheckItem
+import com.example.checklistbygleb.domain.repository.CheckListRepository
+import com.example.checklistbygleb.domain.usecases.DeleteCheckItemUseCase
+import com.example.checklistbygleb.domain.usecases.EditCheckItemUseCase
+import com.example.checklistbygleb.domain.usecases.GetCheckListUseCase
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = CheckListRepositoryImpl(application)
-
-    private val getCheckListUseCase = GetCheckListUseCase(repository)
-    private val deleteCheckItemUseCase = DeleteCheckItemUseCase(repository)
-    private val editCheckItemUseCase = EditCheckItemUseCase(repository)
+class MainViewModel @Inject constructor(
+    private val getCheckListUseCase: GetCheckListUseCase,
+    private val deleteCheckItemUseCase: DeleteCheckItemUseCase,
+    private val editCheckItemUseCase: EditCheckItemUseCase,
+) : ViewModel() {
 
     val checkList = getCheckListUseCase.getCheckList()
 
